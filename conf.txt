@@ -1,0 +1,80 @@
+
+Switch Conf.
+
+int range fa0/2-4
+switchport mode access
+switchport access vlan 10
+exit
+
+int range fa0/5-7
+switchport mode access
+switchport access vlan 20
+exit
+
+int range fa0/8-10
+switchport mode access
+switchport access vlan 20
+
+int fa 0/1
+switchport mode trunk
+exit
+
+do wr 
+
+router conf.
+int g0/0
+no sh
+exit
+
+
+int g0/0.10
+encapsulation dot1Q 10
+ip address 192.168.1.1 255.255.255.192
+exit
+
+int g0/0.20
+encapsulation dot1Q 20
+ip address 192.168.1.65 255.255.255.192
+exit
+
+int g0/0.30
+encapsulation dot1Q 30
+ip address 192.168.1.129 255.255.255.192
+exit
+
+do wr
+
+
+dhcp conf on router
+
+service dhcp
+
+
+#ip dhcp pool Admin-Pool
+Router(dhcp-config)#network 192.168.1.0 255.255.255.192
+Router(dhcp-config)#default
+Router(dhcp-config)#default-router 192.168.1.1
+Router(dhcp-config)#dns
+Router(dhcp-config)#dns-server 192.168.1.1
+Router(dhcp-config)#doma
+Router(dhcp-config)#domain-name admin.com
+Router(dhcp-config)#exit
+Router(config)#ip dhcp pool Finance-Pool
+Router(dhcp-config)#network 192.168.1.64 255.255.255.192
+Router(dhcp-config)#defa
+Router(dhcp-config)#default-router 192.168.1.65
+Router(dhcp-config)#dns
+Router(dhcp-config)#dns-server 192.168.1.65
+Router(dhcp-config)#dom
+Router(dhcp-config)#domain-name finance.com
+Router(dhcp-config)#exit
+Router(config)#ip dhcp pool Customer-Pool
+Router(dhcp-config)#network 192.168.1.128 255.255.255.192
+Router(dhcp-config)#def
+Router(dhcp-config)#default-router 192.168.1.129
+Router(dhcp-config)#dns
+Router(dhcp-config)#dns-server 192.168.1.129
+Router(dhcp-config)#dom
+Router(dhcp-config)#domain-name customer.com
+Router(dhcp-config)#exit
+Router(config)#do wr
